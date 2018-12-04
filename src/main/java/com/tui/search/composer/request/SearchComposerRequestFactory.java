@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import javax.annotation.Resource;
 
-import com.tui.search.composer.clients.SearchComposerClient;
+import com.tui.search.composer.client.SearchComposerClient;
 import com.tui.search.composer.constants.ExecutionType;
 import com.tui.search.composer.executors.EventCompleteObserver;
 

@@ -1,6 +1,7 @@
 package com.tui.search.composer.request;
 
-import com.tui.search.composer.clients.SearchComposerClient;
+import com.tui.search.composer.client.SearchComposerClient;
+import com.tui.search.composer.client.SearchComposerClientRequest;
 import com.tui.search.composer.constants.ExecutionType;
 import com.tui.search.composer.executors.EventCompleteObserver;
 import com.tui.search.composer.executors.EventCompletePublisher;
@@ -13,6 +14,8 @@ import com.tui.search.composer.executors.EventCompleteSubscriber;
  *
  */
 public class SearchComposerRequest implements EventCompletePublisher, EventCompleteSubscriber {
+	
+	private SearchComposerClientRequest request;
 
 	private EventCompleteObserver observer;
 
@@ -57,6 +60,14 @@ public class SearchComposerRequest implements EventCompletePublisher, EventCompl
 	@Override
 	public void publishCompletion() {
 		this.publishCompletion(this.observer);
+	}
+
+	public SearchComposerClientRequest getRequest() {
+		return request;
+	}
+
+	public void setRequest(SearchComposerClientRequest request) {
+		this.request = request;
 	}
 
 }
