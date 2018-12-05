@@ -11,7 +11,10 @@ package com.tui.search.composer.client;
  * @author sarkh
  *
  */
-public interface SearchComposerClient {
+public interface SearchComposerClient<P, R extends SearchComposerClientParams, S> {
 
-	void execute();
+	SearchComposerClientResponse<S> execute(SearchComposerClientRequest<P> request);
+	
+	R getParams();
+	
 }

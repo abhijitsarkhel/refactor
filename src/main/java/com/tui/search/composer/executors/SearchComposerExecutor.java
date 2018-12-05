@@ -1,12 +1,20 @@
 package com.tui.search.composer.executors;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.tui.search.composer.client.SearchComposerClientResponse;
 import com.tui.search.composer.constants.ExecutionType;
+import com.tui.search.composer.exception.SearchComposerServiceException;
 import com.tui.search.composer.request.SearchComposerRequest;
 import com.tui.search.composer.response.SearchComposerResponse;
 
@@ -18,17 +26,36 @@ import com.tui.search.composer.response.SearchComposerResponse;
  */
 public class SearchComposerExecutor {
 
-	private BlockingQueue<List<SearchComposerRequest>> requestQueue = new LinkedBlockingQueue<>();
+	/** The Logger */
+	private static final Logger LOGGER = LogManager.getLogger(SearchComposerExecutor.class);
 
+	/** The queue for holding async request batches */
+	private BlockingQueue<List<SearchComposerRequest>> requestQueue = new LinkedBlockingQueue<>();
+	
+	private Map<SearchComposerRequest, SearchComposerClientResponse> responseMap = new HashMap<>();
+
+	/**
+	 * Executes a sequence of request.
+	 * 
+	 * @param sequence the request sequence
+	 * @param response the final response
+	 */
 	public void execute(List<SearchComposerRequest> sequence, SearchComposerResponse response) {
 		try {
 			requestQueue.put(segregateAsyncRequest(sequence));
 		} catch (InterruptedException e) {
-			// TODO Throw proper exception.
+			LOGGER.error("Error while building request queue", e);
+			throw new SearchComposerServiceException("Error while building request queue", e, 500);
 		}
 		executeInternal(sequence, response);
 	}
 
+	/**
+	 * performs the initial segregation of async requests.
+	 * 
+	 * @param sequence the request sequence
+	 * @return the async request batch
+	 */
 	private List<SearchComposerRequest> segregateAsyncRequest(List<SearchComposerRequest> sequence) {
 		List<SearchComposerRequest> result = new ArrayList<>();
 		Iterator<SearchComposerRequest> requestIterator = sequence.iterator();
@@ -40,12 +67,19 @@ public class SearchComposerExecutor {
 			} else if (ExecutionType.SYNC.equals(request.getExecutionType())) {
 				request.suscribe();
 			} else {
-				// TODO - throw exception that execution type is not set.
+				LOGGER.error("Unknown execution type set for the request.");
+				throw new SearchComposerServiceException("Unknown execution type set for the request.", 500);
 			}
 		}
 		return result;
 	}
 
+	/**
+	 * Separates all the async requests post first segregation.
+	 * 
+	 * @param sequence the request sequence
+	 * @return the async request batch
+	 */
 	private List<SearchComposerRequest> segregateAsyncRequestNext(List<SearchComposerRequest> sequence) {
 		List<SearchComposerRequest> result = new ArrayList<>();
 		Iterator<SearchComposerRequest> requestIterator = sequence.iterator();
@@ -59,26 +93,40 @@ public class SearchComposerExecutor {
 		return result;
 	}
 
+	/**
+	 * Executes the request batch created and stored in queue and updates the queue
+	 * with new batch of request.
+	 * 
+	 * @param sequence the request batch
+	 * @param response the final response
+	 */
 	private void executeInternal(List<SearchComposerRequest> sequence, SearchComposerResponse response) {
 		do {
 			try {
 				executeAsync(requestQueue.take(), response);
 				List<SearchComposerRequest> newRequest = segregateAsyncRequestNext(sequence);
-				// TODO - Use utils
-				if (!newRequest.isEmpty()) {
+				if (CollectionUtils.isNotEmpty(newRequest)) {
 					requestQueue.put(newRequest);
 				}
 			} catch (InterruptedException e) {
-				// TODO Throw proper exception.
-				e.printStackTrace();
+				LOGGER.error("Error while executing request", e);
+				throw new SearchComposerServiceException("Error while executing request", e, 500);
 			}
 		} while (!requestQueue.isEmpty());
 	}
 
+	/**
+	 * Executes the batch of async requests.
+	 * 
+	 * @param requestList async request batch
+	 * @param response    the final response.
+	 */
 	private void executeAsync(List<SearchComposerRequest> requestList, SearchComposerResponse response) {
 		requestList.parallelStream().forEach(req -> {
 			// TODO - Update
-			req.getClient().execute();
+			SearchComposerClientResponse resp = req.getClient().execute(req.getRequestBuilder().build());
+			responseMap.put(req, resp);
+			req.getHandler().handle(resp, response, req.getRequestParams());
 		});
 
 	}

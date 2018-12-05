@@ -2,7 +2,8 @@ package com.tui.search.composer.models;
 
 import java.util.List;
 
-import com.tui.uk.search.packages.request.params.DealsRulesRequestParams;
+import com.tui.search.composer.request.rules.params.DealsRulesRequestParams;
+
 
 public class ConfigParamsList
 {

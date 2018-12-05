@@ -10,17 +10,19 @@ package com.tui.elastic.anite.jaxb.response;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
+import com.tui.search.composer.utils.XSDateCustomBinder;
+
 public class Adapter1
     extends XmlAdapter<String, String>
 {
 
 
     public String unmarshal(String value) {
-        return (com.tui.uk.search.packages.util.XSDateCustomBinder.parseDate(value));
+        return (XSDateCustomBinder.parseDate(value));
     }
 
     public String marshal(String value) {
-        return (com.tui.uk.search.packages.util.XSDateCustomBinder.printDate(value));
+        return (XSDateCustomBinder.printDate(value));
     }
 
 }

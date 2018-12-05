@@ -5,6 +5,7 @@ package com.tui.search.composer.models;
  * @author lakshmipathi.d
  *
  */
+@Deprecated
 public class SearchResultResponse
 {
 

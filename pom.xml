@@ -20,7 +20,6 @@
 		<joda.version>2.5</joda.version>
 		<aspectj.version>1.8.4</aspectj.version>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>commons-collections</groupId>
@@ -45,13 +44,11 @@
 			<artifactId>aws-signing-request-interceptor</artifactId>
 			<version>0.0.20</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>elasticsearch-rest-client</artifactId>
 			<version>6.2.4</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.searchbox</groupId>
 			<artifactId>jest</artifactId>
@@ -70,7 +67,6 @@
 			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>transport</artifactId>
@@ -227,8 +223,6 @@
 			<artifactId>guava</artifactId>
 			<version>25.0-jre</version>
 		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.elasticsearch.plugin/x-pack -->
 
 		<!-- Junit dependencies -->
 		<dependency>
@@ -454,6 +448,11 @@
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.22.0</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

@@ -1,11 +1,14 @@
 package com.tui.search.composer.request;
 
 import com.tui.search.composer.client.SearchComposerClient;
-import com.tui.search.composer.client.SearchComposerClientRequest;
+import com.tui.search.composer.client.SearchComposerClientParams;
 import com.tui.search.composer.constants.ExecutionType;
-import com.tui.search.composer.executors.EventCompleteObserver;
-import com.tui.search.composer.executors.EventCompletePublisher;
-import com.tui.search.composer.executors.EventCompleteSubscriber;
+import com.tui.search.composer.executors.event.EventCompleteObserver;
+import com.tui.search.composer.executors.event.EventCompletePublisher;
+import com.tui.search.composer.executors.event.EventCompleteSubscriber;
+import com.tui.search.composer.request.builder.SearchComposerClientRequestBuilder;
+import com.tui.search.composer.request.params.SearchComposerRequestParams;
+import com.tui.search.composer.response.SearchComposerResponseHandler;
 
 /**
  * Represents a Search Composer Request.
@@ -13,15 +16,20 @@ import com.tui.search.composer.executors.EventCompleteSubscriber;
  * @author sarkh
  *
  */
-public class SearchComposerRequest implements EventCompletePublisher, EventCompleteSubscriber {
-	
-	private SearchComposerClientRequest request;
+public class SearchComposerRequest<P, Q extends SearchComposerClientParams, R, S>
+		implements EventCompletePublisher, EventCompleteSubscriber {
+
+	private SearchComposerClient<P, Q, R> client;
+
+	private SearchComposerClientRequestBuilder<P> requestBuilder;
+
+	private SearchComposerResponseHandler<S> handler;
 
 	private EventCompleteObserver observer;
 
-	private SearchComposerClient client;
-
 	private ExecutionType executionType;
+
+	private SearchComposerRequestParams requestParams;
 
 	private SearchComposerRequest dependsOn;
 
@@ -62,12 +70,28 @@ public class SearchComposerRequest implements EventCompletePublisher, EventCompl
 		this.publishCompletion(this.observer);
 	}
 
-	public SearchComposerClientRequest getRequest() {
-		return request;
+	public SearchComposerClientRequestBuilder<P> getRequestBuilder() {
+		return requestBuilder;
 	}
 
-	public void setRequest(SearchComposerClientRequest request) {
-		this.request = request;
+	public void setRequestBuilder(SearchComposerClientRequestBuilder<P> requestBuilder) {
+		this.requestBuilder = requestBuilder;
+	}
+
+	public SearchComposerResponseHandler<S> getHandler() {
+		return handler;
+	}
+
+	public void setHandler(SearchComposerResponseHandler<S> handler) {
+		this.handler = handler;
+	}
+
+	public SearchComposerRequestParams getRequestParams() {
+		return requestParams;
+	}
+
+	public void setRequestParams(SearchComposerRequestParams requestParams) {
+		this.requestParams = requestParams;
 	}
 
 }

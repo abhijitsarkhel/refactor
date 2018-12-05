@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.springframework.util.StringUtils;
 
-import com.tui.search.composer.rules.models.Destination;
-import com.tui.search.composer.rules.models.Filter;
-import com.tui.search.composer.rules.models.ResultsParamsList;
-import com.tui.search.composer.rules.models.Spotlight;
+import com.tui.search.composer.models.rules.Destination;
+import com.tui.search.composer.models.rules.Filter;
+import com.tui.search.composer.models.rules.ResultsParamsList;
+import com.tui.search.composer.models.rules.Spotlight;
 
 public class RulesRequest
 {

@@ -11,10 +11,10 @@ import javax.print.attribute.standard.Destination;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.tui.search.composer.models.DiscType;
+import com.tui.search.composer.constants.DiscType;
+import com.tui.search.composer.inventory.jaxb.InventoryOffersByCorporateCode;
 import com.tui.search.composer.models.HolidayType;
-import com.tui.search.composer.rules.request.params.DealsRulesRequestParams;
-import com.tui.uk.search.packages.inventory.jaxb.InventoryOffersByCorporateCode;
+import com.tui.search.composer.request.rules.params.DealsRulesRequestParams;
 
 @JsonInclude(Include.NON_NULL)
 public class DealsRequestParams extends SearchComposerRequestParams {
