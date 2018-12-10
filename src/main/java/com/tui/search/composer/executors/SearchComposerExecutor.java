@@ -31,7 +31,7 @@ public class SearchComposerExecutor {
 
 	/** The queue for holding async request batches */
 	private BlockingQueue<List<SearchComposerRequest>> requestQueue = new LinkedBlockingQueue<>();
-	
+
 	private Map<SearchComposerRequest, SearchComposerClientResponse> responseMap = new HashMap<>();
 
 	/**
@@ -39,14 +39,11 @@ public class SearchComposerExecutor {
 	 * 
 	 * @param sequence the request sequence
 	 * @param response the final response
+	 * @throws InterruptedException
 	 */
-	public void execute(List<SearchComposerRequest> sequence, SearchComposerResponse response) {
-		try {
-			requestQueue.put(segregateAsyncRequest(sequence));
-		} catch (InterruptedException e) {
-			LOGGER.error("Error while building request queue", e);
-			throw new SearchComposerServiceException("Error while building request queue", e, 500);
-		}
+	public void execute(List<SearchComposerRequest> sequence, SearchComposerResponse response)
+			throws InterruptedException {
+		requestQueue.put(segregateAsyncRequest(sequence));
 		executeInternal(sequence, response);
 	}
 

@@ -19,13 +19,7 @@ import com.tui.search.composer.request.rules.params.DealsRulesRequestParams;
 @JsonInclude(Include.NON_NULL)
 public class DealsRequestParams extends SearchComposerRequestParams {
 
-	private String pageName;
-
-	private String siteId;
-
 	private String holidayCategory;
-
-	private String searchType;
 
 	private String pageID;
 
@@ -193,30 +187,6 @@ public class DealsRequestParams extends SearchComposerRequestParams {
 
 	public void setHolidayCategory(String holidayCategory) {
 		this.holidayCategory = holidayCategory;
-	}
-
-	public String getPageName() {
-		return pageName;
-	}
-
-	public void setPageName(String pageName) {
-		this.pageName = pageName;
-	}
-
-	public String getSiteId() {
-		return siteId;
-	}
-
-	public void setSiteId(String siteId) {
-		this.siteId = siteId;
-	}
-
-	public String getSearchType() {
-		return searchType;
-	}
-
-	public void setSearchType(String searchType) {
-		this.searchType = searchType;
 	}
 
 	public DealsRulesRequestParams getRulesParam() {
